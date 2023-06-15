@@ -1,0 +1,53 @@
+<!doctype html>
+<!--<html lang="en" data-theme="dark">-->
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>4000 Essential English Words</title>
+	<link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
+    <link href='{{ url_for("static", filename="css/bootstrap.min.css") }}' rel="stylesheet" type="text/css" id="bs-default-stylesheet"/>
+    <link href='{{ url_for("static", filename="css/style.css") }}' rel="stylesheet" type="text/css" id="bs-default-stylesheet"/>
+    <link href='{{ url_for("static", filename="css/loading.css") }}' rel="stylesheet" type="text/css" id="bs-default-stylesheet"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.9.96/css/materialdesignicons.min.css">
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notify.js') }}"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id='aura-bg' onclick="auraBgClick()" class="position-fixed w-100 h-100 bg-dark" style="top:0; left:0; opacity: 0.5; z-index: 10001; display: none"></div>
+<!--<div class="position-fixed w-100 h-100 z-index1 bg-main" style="top:0; left:0; opacity: 0.95;"></div>-->
+<div class="position-relative container-md mt-2 mt-lg-5">
+	<div class="row">
+		<div class="col-lg-10 offset-lg-1">
+			<div class="card">
+				<div class="card-body p-1 px-3">
+					<nav class="navbar navbar-light">
+						<a class="navbar-brand" href="/">
+                            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="img-fluid" style="height: 40px">
+							<h1 class="d-inline fs-5 position-relative" style="top: 2px">4000 Essential English Words</h1>
+						</a>
+						<div class="float-end"></div>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="position-relative container-md mt-2">
+    {% block container %}{% endblock %}
+</div>
+<div class="position-relative container-md mt-1">
+	<div class="row">
+		<div class="col-lg-10 offset-lg-1">
+			<div class="card">
+				<div class="card-body small p-1 px-3">
+					Copyright &copy; AliMZ <span class="text-secondary">v2.1</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

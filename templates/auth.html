@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block container %}
+    <script>
+        let a;
+
+        function submitForm(form) {
+            form = $(form);
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                data: form.serialize(),
+                dataType: "json",
+                success: function (result) {
+                    window.location.href = "{{ url_for('index') }}";
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    $.notify(jqXHR.responseJSON.msg, "error");
+                }
+            });
+            return false;
+        }
+    </script>
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="row">
+                <div class="col-lg-6 mb-1 mb-lg-0">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Login
+                        </div>
+                        <div class="card-body h-100">
+                            <form onsubmit="return submitForm(this)" action="{{ url_for('login') }}" method="post">
+                                <input name="email" type="email" class="form-control mb-2" placeholder="Email">
+                                <input name="password" type="password" class="form-control mb-2" placeholder="Password">
+                                <button type="submit" class="btn btn-info w-100 text-white">Login</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Register
+                        </div>
+                        <div class="card-body">
+                            <form onsubmit="return submitForm(this)" action="{{ url_for('register') }}" method="post">
+                                <input name="email" type="email" class="form-control mb-2" placeholder="Email">
+                                <input name="password" type="password" class="form-control mb-2" placeholder="Password">
+                                <input name="re_password" type="password" class="form-control mb-2" placeholder="Re password">
+                                <input name="fullname" type="text" class="form-control mb-2" placeholder="Full name">
+                                <button type="submit" class="btn btn-info w-100 text-white">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

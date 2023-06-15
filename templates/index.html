@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+{% block container %}
+    <script>
+        function getMagnetDetail(elem, word_id) {
+            $(elem).css('z-index', '10002');
+            $('#aura-bg').fadeIn();
+            $(elem).find('.magnet-detail').slideDown();
+            setWordDetails(elem, word_id)
+        }
+
+        function auraBgClick() {
+            $('.magnet-detail').slideUp('fast');
+            $('.magnet-box').css('z-index', '10000');
+            $('#aura-bg').fadeOut();
+        }
+
+        function changeMagnetStatus(magnet_id, status_id) {
+            $.getJSON("/change-magnet-status/" + magnet_id + "/" + status_id, function (result) {
+                // if (result['code'] === 200) {
+                // 	$.notify(result['description'], "success");
+                // } else {
+                // 	$.notify(result['description'], "error");
+                // }
+                auraBgClick();
+            });
+        }
+
+        function changeUnitStatus(unit_id, status_id) {
+            $.getJSON("change-unit-status/" + unit_id + "/" + status_id, function (result) {
+                // $("#login-body-loading").hide();
+                location.reload();
+            });
+        }
+
+        function tts(word_id) {
+            let audio_link = "/tts/" + word_id;
+            let audioElement = document.createElement('audio');
+            audioElement.setAttribute('src', audio_link);
+            audioElement.play();
+        }
+
+        function setWordDetails(elem, word_id) {
+            $.getJSON("/call-details-api/" + word_id, function (result) {
+                let synonyms = '';
+                for (let i = 0; i < result['synonyms'].length; i++) {
+                    synonyms += result['synonyms'][i];
+                    if (i != result['synonyms'].length - 1) {
+                        synonyms += ', ';
+                    }
+                }
+
+                $(elem).find('.synonyms').html(synonyms);
+            });
+        }
+
+        $(document).ready(function () {
+            $('#units-selector input').click(function () {
+                $("#login-body-loading").show();
+                if ($(this).is(':checked') == true) {
+                    changeUnitStatus($(this).val(), 1)
+                } else {
+                    changeUnitStatus($(this).val(), 0)
+                }
+            });
+        })
+    </script>
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1 mb-2">
+            <div class="card">
+                <div class="card-header overflow-hidden">
+                    <div class="float-start">Choice of units</div>
+                    <div class="float-end">
+                        <button class="btn btn-info btn-sm text-white py-0" data-bs-toggle="collapse" data-bs-target="#units-collapse" aria-expanded="false" aria-controls="units-collapse">
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="units-collapse">
+                    <div class="card-body position-relative" id="units-selector">
+                        <div id="login-body-loading" style="margin: -1rem">
+                            <div>
+                                <div class="lds-ellipsis">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% for u in all_units %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="unit-{{ u[0] }}-{{ u[1] }}" value="{{ u[0] }},{{ u[1] }}" {{ 'checked' if (u[0] | string )+'-'+(u[1] | string ) in selected_units }}>
+                                <label class="form-check-label" for="unit-{{ u[0] }}-{{ u[1] }}">Book: {{ u[0] }},
+                                    Unit: {{ u[1] }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10 offset-lg-1">
+            <section>
+                <div class="aside">
+                    <div class="widget-magnet position-relative">
+                        <div class="row">
+                            {% for word in words %}
+                                <div class="col-xxl-3 col-md-6 mb-1">
+                                    <div class="card">
+                                        <div class="card-body magnet-box" style="" onclick="getMagnetDetail(this, {{ word.id }})">
+                                            <div class="h--c-magnet">
+                                                <div class="h--c-magnet-head clearfix">
+                                                    <div class="word--magnet">
+                                                        <h2>{{ word.word_en }}</h2></div>
+                                                    <div class="opt--magnet">
+                                                        <ul>
+                                                            <li style="cursor: pointer">
+                                                                <i class="mdi mdi-chevron-down"></i>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="magnet-detail" style="display: none">
+                                                    <div class="word--liste mt-1 overflow-hidden">
+                                                        <a href="javascript:void(0)" class="float-start"><span>
+														{{ word.pron }}
+													</span></a>
+                                                        <a href="javascript:void(0)" class="float-end text-primary" onclick="tts({{ word.id }})"><i class="mdi mdi-volume-high"></i></a>
+                                                    </div>
+                                                    <div class="h--c-magnet-info">
+                                                        <div class="gt-def-row--magnet synonyms"></div>
+                                                        <div class="gt-def-example--magnet">
+                                                            <p>{{ word.dsc_en }}</p>
+                                                        </div>
+                                                        <div class="gt-def-example--magnet">
+                                                            <p class="mb-1">
+                                                                <img src="{{ url_for('static', filename='img/fa.svg') }}" style="max-width: 20px">
+                                                                {{ word.word_fa }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-act">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <a href="javascript:void(0)" onclick="changeMagnetStatus({{ word.magnet_id }}, 2)"><i class="mdi mdi-rotate-left" title="Not Learned"></i></a>
+                                                            </div>
+                                                            <div class="col">
+                                                                <a href="javascript:void(0)" onclick="changeMagnetStatus({{ word.magnet_id }}, 3)"><i class="mdi mdi-help" title="Review"></i></a>
+                                                            </div>
+                                                            <div class="col">
+                                                                <a href="javascript:void(0)" onclick="changeMagnetStatus({{ word.magnet_id }}, 4)"><i class="mdi mdi-check-all" title="Learned"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

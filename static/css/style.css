@@ -1,0 +1,269 @@
+:root {
+	--white: #fff;
+	--black: #333;
+	--light_white: #f2f5fa;
+	--light_blue: #308ad0;
+	--light_black: #95a5a6;
+	--dark_black: #555;
+	--red: #f44336;
+	--bg-color: #eee;
+	--light_gray: rgba(0, 0, 0, .125);
+}
+
+[data-theme="dark"] {
+	--white: #222121;
+	--black: #fafafa;
+	--light_white: #333;
+	--light_blue: #4981aa;
+	--light_black: #95a5a6;
+	--dark_black: #555;
+	--red: #f44336;
+	--bg-color: #585858;
+	--light_gray: rgba(255, 255, 255, .125);
+}
+
+@font-face {
+	font-family: IRANSans-web;
+	font-style: normal;
+	font-weight: bold;
+	src: url('../fonts/IRANSansWeb_Bold.eot');
+	src: url('../fonts/IRANSansWeb_Bold.eot?#iefix') format('embedded-opentype'),
+	url('../fonts/IRANSansWeb_Bold.woff2') format('woff2'),
+	url('../fonts/IRANSansWeb_Bold.woff') format('woff'),
+	url('../fonts/IRANSansWeb_Bold.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: IRANSans-web;
+	font-style: normal;
+	font-weight: 500;
+	src: url('../fonts/IRANSansWeb_Medium.eot');
+	src: url('../fonts/IRANSansWeb_Medium.eot?#iefix') format('embedded-opentype'), url('../fonts/IRANSansWeb_Medium.woff2') format('woff2'), url('../fonts/IRANSansWeb_Medium.woff') format('woff'), url('../fonts/IRANSansWeb_Medium.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: IRANSans-web;
+	font-style: normal;
+	font-weight: 300;
+	src: url('../fonts/IRANSansWeb_Light.eot');
+	src: url('../fonts/IRANSansWeb_Light.eot?#iefix') format('embedded-opentype'), url('../fonts/IRANSansWeb_Light.woff2') format('woff2'), url('../fonts/IRANSansWeb_Light.woff') format('woff'), url('../fonts/IRANSansWeb_Light.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: IRANSans-web;
+	font-style: normal;
+	font-weight: 200;
+	src: url('../fonts/IRANSansWeb_UltraLight.eot');
+	src: url('../fonts/IRANSansWeb_UltraLight.eot?#iefix') format('embedded-opentype'), url('../fonts/IRANSansWeb_UltraLight.woff2') format('woff2'), url('../fonts/IRANSansWeb_UltraLight.woff') format('woff'), url('../fonts/IRANSansWeb_UltraLight.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: IRANSans-web;
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/IRANSansWeb.eot');
+	src: url('../fonts/IRANSansWeb.eot?#iefix') format('embedded-opentype'), url('../fonts/IRANSansWeb.woff2') format('woff2'), url('../fonts/IRANSansWeb.woff') format('woff'), url('../fonts/IRANSansWeb.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: IRANSans-web-fa;
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/IRANSansWeb(FaNum).eot');
+	src: url('../fonts/IRANSansWeb(FaNum).eot?#iefix') format('embedded-opentype'), url('../fonts/IRANSansWeb(FaNum).woff2') format('woff2'), url('../fonts/IRANSansWeb(FaNum).woff') format('woff'), url('../fonts/IRANSansWeb(FaNum).ttf') format('truetype');
+}
+
+body {
+	background-image: url("../img/bg.jpg");
+	background-size: cover;
+	font-family: "IRANSans-web", Roboto !important;
+}
+
+ul {
+	list-style-type: none !important;
+	margin: 0;
+}
+
+section .aside {
+	width: 100%;
+	display: block;
+}
+
+section .aside .head--widget {
+	width: 100%;
+	display: block;
+	margin-bottom: 10px;
+}
+
+section .aside .head--widget h3 {
+	padding: 0;
+	margin: 0;
+	font-size: 20px;
+}
+
+section .aside .card {
+	/*padding-top: .8em;*/
+	/*margin-bottom: 1.5em;*/
+	overflow: inherit;
+	box-shadow: 0 5px 10px -4px rgba(0, 0, 0, .05);
+}
+
+section .aside .card:hover {
+	box-shadow: 0 5px 10px -4px rgba(0, 0, 0, .05);
+}
+
+section .aside .widget-magnet {
+	/*margin-bottom: 4em;*/
+}
+
+section .aside .widget-magnet .card .h--c-magnet .word--magnet {
+	float: left;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .word--magnet h2 {
+	padding: 0;
+	margin: 0;
+	color: var(--light_blue);
+	font-size: 16px;
+	line-height: 26px;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet {
+	float: right;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul {
+	display: inline-flex;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul li {
+	margin-right: 10px;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul li:last-child {
+	margin: 0;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul li a.bt {
+	width: 28px;
+	height: 28px;
+	display: block;
+	text-align: center;
+	border: 1px solid var(--light_white);
+	border-radius: 100px;
+	color: var(--light_black);
+}
+
+section .aside .dropdown.lang a[aria-expanded="true"] {
+	color: var(--light_blue) !important;
+	opacity: 1;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul li .lang a.dropdown-toggle {
+	width: auto;
+	height: 28px;
+	padding: 0 5px;
+	font-size: 13px;
+	line-height: 24px;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul li .dropdown.lang .dropdown-toggle::after {
+	display: none;
+}
+
+section .aside .widget-magnet .card .h--c-magnet .h--c-magnet-head .opt--magnet ul li .lang a.dropdown-toggle img {
+	height: 18px;
+}
+
+section .aside .widget-magnet .card .word--liste {
+	margin-bottom: 1em;
+	/*line-height: 9px;*/
+}
+
+section .aside .widget-magnet .card .word--liste a {
+	display: inline-block;
+	color: var(--red);
+	text-decoration: none;
+}
+
+section .aside .widget-magnet .card .word--liste span {
+	margin-right: 1em;
+	font-size: 14px;
+}
+
+section .aside .widget-magnet .card .h--c-magnet-info {
+	padding: 0 10px;
+	line-height: 1.9;
+}
+
+section .aside .widget-magnet .card .h--c-magnet-info .gt-def-row--magnet p {
+	padding: 0;
+	margin: 0;
+	color: var(--dark_black);
+}
+
+section .aside .widget-magnet .card .h--c-magnet-info .gt-def-example--magnet p {
+	padding: 0;
+	margin: 0.2em 0 0.2em 0;
+	color: var(--light_black);
+	font-size: 13px;
+}
+
+section .aside .widget-magnet .card .btn-act {
+	margin-top: 5px;
+	background-color: var(--light_white);
+	/*height: 36px;*/
+	text-align: center;
+	line-height: 33px;
+	border-radius: 100px;
+	font-size: 22px;
+}
+
+section .aside .widget-magnet .card .btn-act a {
+	color: var(--light_black);
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	transition: all .2s ease;
+}
+
+section .aside .widget-magnet .card .btn-act a:hover {
+	color: var(--light_blue);
+}
+
+#login-body-loading {
+	position: absolute;
+	display: none;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.6);
+}
+
+#login-body-loading > div {
+	position: absolute;
+	width: 85px;
+	height: 85px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.z-index1 {
+	z-index: 1;
+}
+
+.z-index10 {
+	z-index: 10;
+}
+
+.bg-main {
+	background-color: var(--bg-color);
+}
+
+.card, .card-body {
+	background: var(--white);
+	border-color: var(--light_gray);
+}
+
+.text-b {
+	color: var(--black);
+}
