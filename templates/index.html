@@ -111,6 +111,7 @@
                 <div class="aside">
                     <div class="widget-magnet position-relative">
                         <div class="row">
+                            {% set status_colors = ['text-secondary', 'text-danger', 'text-info', 'text-success'] %}
                             {% for word in words %}
                                 <div class="col-xxl-3 col-md-6 mb-1">
                                     <div class="card">
@@ -121,7 +122,7 @@
                                                         <h2>{{ word.word_en }}</h2>
                                                     </div>
                                                     <div class="opt--magnet">
-                                                        <div class="d-inline-block text-secondary" style="font-size: 80%">{{ word.title }}</div>
+                                                        <div class="d-inline-block {{ status_colors[word.status_id - 1] }}" style="font-size: 60%">{{ word.title }}</div>
                                                         <ul>
                                                             <li style="cursor: pointer">
                                                                 <i class="mdi mdi-chevron-down"></i>

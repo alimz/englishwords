@@ -44,7 +44,7 @@ def index():
         all_units_res[bu[0]].append(bu[1])
 
     words = db.session.execute(text(
-        f'SELECT "magnets"."id" AS "magnet_id", "magnets"."fetch", "magnet_history_status"."title", "words".* FROM "magnets" LEFT JOIN ( SELECT "magnet_histories".* FROM "magnet_histories" INNER JOIN ( SELECT MAX ("id") AS "id", "magnet_id" FROM "magnet_histories" GROUP BY "magnet_id" ) AS "X" ON "X"."id" = "magnet_histories"."id" ) AS "MagnetHistoriy" ON "magnets"."id" = "MagnetHistoriy"."magnet_id" INNER JOIN "magnet_history_status" ON "magnet_history_status"."id" = "MagnetHistoriy"."status_id" INNER JOIN "words" ON "words"."id" = "magnets"."word_id" WHERE "magnets"."selected" = 1 AND "magnets"."user_id" = \'{session["user_id"]}\' ORDER BY ( random() ^ (1.0 / ("MagnetHistoriy"."status_id" + ("magnets"."fetch" * 0.1)) )) ASC'))
+        f'SELECT "magnets"."id" AS "magnet_id", "magnets"."fetch", "magnet_history_status"."id" AS "status_id", "magnet_history_status"."title", "words".* FROM "magnets" LEFT JOIN ( SELECT "magnet_histories".* FROM "magnet_histories" INNER JOIN ( SELECT MAX ("id") AS "id", "magnet_id" FROM "magnet_histories" GROUP BY "magnet_id" ) AS "X" ON "X"."id" = "magnet_histories"."id" ) AS "MagnetHistoriy" ON "magnets"."id" = "MagnetHistoriy"."magnet_id" INNER JOIN "magnet_history_status" ON "magnet_history_status"."id" = "MagnetHistoriy"."status_id" INNER JOIN "words" ON "words"."id" = "magnets"."word_id" WHERE "magnets"."selected" = 1 AND "magnets"."user_id" = \'{session["user_id"]}\' ORDER BY ( random() ^ (1.0 / ("MagnetHistoriy"."status_id" + ("magnets"."fetch" * 0.1)) )) ASC'))
 
     return render_template('index.html', all_units=all_units_res, selected_units=selected_units, words=words)
 
@@ -57,6 +57,7 @@ def get_word_synonyms(res):
                 if len(synonyms) > 3:
                     return synonyms
                 synonyms.append(s)
+    return synonyms
 
 
 @app.route('/call-details-api/<word_id>')
