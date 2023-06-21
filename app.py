@@ -105,10 +105,12 @@ def change_unit_status(unit_section, status_id):
     words_ids = [w.id for w in words]
     if int(status_id):
         existed_words = db.session.query(Magnet.word_id).filter(and_(
-            Magnet.user_id == session['user_id'], Magnet.word_id.in_(words_ids)))
+            Magnet.user_id == session['user_id'], Magnet.word_id.in_(words_ids))).all()
         existed_words_ids = [w.word_id for w in existed_words]
         new_words_ids = set(words_ids) - set(existed_words_ids)
         db.session.add_all([Magnet(word_id=w, user_id=session['user_id']) for w in new_words_ids])
+        db.session.query(Magnet).filter(and_(
+            Magnet.word_id.in_(existed_words_ids), Magnet.user_id == session['user_id'])).update({'selected': 1})
         db.session.commit()
         db.session.execute(text(
             f'INSERT INTO "magnet_histories" ("magnet_id", "status_id") SELECT "id" AS "magnet_id", \'1\' AS "status_id" FROM "magnets" WHERE "magnets"."user_id" = \'{session["user_id"]}\' AND "magnets"."id" NOT IN (SELECT "magnet_id" FROM "magnet_histories")'))
