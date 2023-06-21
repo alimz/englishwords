@@ -34,13 +34,19 @@ def index():
         Word.book_id, Word.unit_id).order_by(asc(Word.book_id), asc(Word.unit_id)).all()
 
     selected_units = db.session.execute(text(
-        f'SELECT "book_id", "unit_id" FROM "words" WHERE "id" IN (SELECT "word_id" FROM "magnets" WHERE "user_id" = \'{session["user_id"]}\') GROUP BY "book_id", "unit_id"'))
+        f'SELECT "book_id", "unit_id" FROM "words" WHERE "id" IN (SELECT "word_id" FROM "magnets" WHERE "selected" = 1 AND "user_id" = \'{session["user_id"]}\') GROUP BY "book_id", "unit_id"'))
     selected_units = [f'{su[0]}-{su[1]}' for su in selected_units]
+
+    all_units_res = dict()
+    for bu in all_units:
+        if bu[0] not in all_units_res:
+            all_units_res[bu[0]] = list()
+        all_units_res[bu[0]].append(bu[1])
 
     words = db.session.execute(text(
         f'SELECT "magnets"."id" AS "magnet_id", "magnets"."fetch", "words".* FROM "magnets" LEFT JOIN( SELECT "magnet_histories".* FROM "magnet_histories" INNER JOIN ( SELECT MAX ("id") AS "id", "magnet_id" FROM "magnet_histories" GROUP BY "magnet_id" ) AS "X" ON "X"."id" = "magnet_histories"."id" ) AS "MagnetHistoriy" ON "magnets"."id" = "MagnetHistoriy"."magnet_id" INNER JOIN "words" ON "words"."id" = "magnets"."word_id" WHERE "magnets"."selected" = 1 AND "magnets"."user_id" = \'{session["user_id"]}\' ORDER BY ( random() ^ (1.0 / ("MagnetHistoriy"."status_id" + ("magnets"."fetch" * 0.1)) )) ASC'))
 
-    return render_template('index.html', all_units=all_units, selected_units=selected_units, words=words)
+    return render_template('index.html', all_units=all_units_res, selected_units=selected_units, words=words)
 
 
 @app.route('/call-details-api/<word_id>')
