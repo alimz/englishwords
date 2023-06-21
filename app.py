@@ -49,6 +49,16 @@ def index():
     return render_template('index.html', all_units=all_units_res, selected_units=selected_units, words=words)
 
 
+def get_word_synonyms(res):
+    synonyms = []
+    if type(res) is list and 'meanings' in res[0] and type(res[0]['meanings']) is list:
+        for m in res[0]['meanings']:
+            for s in m['synonyms']:
+                if len(synonyms) > 3:
+                    return synonyms
+                synonyms.append(s)
+
+
 @app.route('/call-details-api/<word_id>')
 @authorize
 def call_details_api(word_id):
@@ -59,16 +69,7 @@ def call_details_api(word_id):
     db.session.commit()
 
     res = requests.get(f'https://api.dictionaryapi.dev/api/v2/entries/en/{word.word_en}').json()
-
-    synonyms = []
-    if type(res) is list and 'meanings' in res[0] and type(res[0]['meanings']) is list:
-        for m in res[0]['meanings']:
-            for s in m['synonyms']:
-                synonyms.append(s)
-                if len(synonyms) == 3:
-                    break
-
-    return jsonify({'synonyms': synonyms}), 200
+    return jsonify({'synonyms': get_word_synonyms(res)}), 200
 
 
 @app.route('/tts/<word_id>')
