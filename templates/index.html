@@ -87,12 +87,21 @@
                                 </div>
                             </div>
                         </div>
-                        {% for u in all_units %}
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="unit-{{ u[0] }}-{{ u[1] }}" value="{{ u[0] }},{{ u[1] }}" {{ 'checked' if (u[0] | string )+'-'+(u[1] | string ) in selected_units }}>
-                                <label class="form-check-label" for="unit-{{ u[0] }}-{{ u[1] }}">Book: {{ u[0] }},
-                                    Unit: {{ u[1] }}</label>
+                        {% for book in all_units %}
+                            <h3>Book: {{ book }}</h3>
+                            <div class="row">
+                                {% for unit in all_units[book] %}
+                                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="unit-{{ book }}-{{ unit }}" value="{{ book }},{{ unit }}" {{ 'checked' if (book | string )+'-'+(unit | string ) in selected_units }}>
+                                            <label class="form-check-label" for="unit-{{ book }}-{{ unit }}">Unit: {{ unit }}</label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
+                            {% if loop.index != all_units | length %}
+                                <hr>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
