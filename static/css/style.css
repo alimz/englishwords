@@ -230,7 +230,7 @@ section .aside .widget-magnet .card .btn-act a:hover {
     color: var(--light_blue);
 }
 
-#login-body-loading {
+.loading-body {
     position: absolute;
     display: none;
     width: 100%;
@@ -238,7 +238,7 @@ section .aside .widget-magnet .card .btn-act a:hover {
     background: rgba(255, 255, 255, 0.6);
 }
 
-#login-body-loading > div {
+.loading-body > div {
     position: absolute;
     width: 85px;
     height: 85px;
