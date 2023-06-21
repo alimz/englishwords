@@ -27,7 +27,6 @@
 
         function changeUnitStatus(unit_id, status_id) {
             $.getJSON("change-unit-status/" + unit_id + "/" + status_id, function (result) {
-                // $("#login-body-loading").hide();
                 location.reload();
             });
         }
@@ -55,7 +54,7 @@
 
         $(document).ready(function () {
             $('#units-selector input').click(function () {
-                $("#login-body-loading").show();
+                $("#units-loading").show();
                 if ($(this).is(':checked') == true) {
                     changeUnitStatus($(this).val(), 1)
                 } else {
@@ -77,7 +76,7 @@
                 </div>
                 <div class="collapse" id="units-collapse">
                     <div class="card-body position-relative" id="units-selector">
-                        <div id="login-body-loading" style="margin: -1rem">
+                        <div class="loading-body" id="units-loading" style="margin: -1rem">
                             <div>
                                 <div class="lds-ellipsis">
                                     <div></div>
@@ -87,12 +86,21 @@
                                 </div>
                             </div>
                         </div>
-                        {% for u in all_units %}
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="unit-{{ u[0] }}-{{ u[1] }}" value="{{ u[0] }},{{ u[1] }}" {{ 'checked' if (u[0] | string )+'-'+(u[1] | string ) in selected_units }}>
-                                <label class="form-check-label" for="unit-{{ u[0] }}-{{ u[1] }}">Book: {{ u[0] }},
-                                    Unit: {{ u[1] }}</label>
+                        {% for book in all_units %}
+                            <h3>Book: {{ book }}</h3>
+                            <div class="row">
+                                {% for unit in all_units[book] %}
+                                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="unit-{{ book }}-{{ unit }}" value="{{ book }},{{ unit }}" {{ 'checked' if (book | string )+'-'+(unit | string ) in selected_units }}>
+                                            <label class="form-check-label" for="unit-{{ book }}-{{ unit }}">Unit: {{ unit }}</label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
+                            {% if loop.index != all_units | length %}
+                                <hr>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -103,6 +111,7 @@
                 <div class="aside">
                     <div class="widget-magnet position-relative">
                         <div class="row">
+                            {% set status_colors = ['text-secondary', 'text-danger', 'text-info', 'text-success'] %}
                             {% for word in words %}
                                 <div class="col-xxl-3 col-md-6 mb-1">
                                     <div class="card">
@@ -110,8 +119,10 @@
                                             <div class="h--c-magnet">
                                                 <div class="h--c-magnet-head clearfix">
                                                     <div class="word--magnet">
-                                                        <h2>{{ word.word_en }}</h2></div>
+                                                        <h2>{{ word.word_en }}</h2>
+                                                    </div>
                                                     <div class="opt--magnet">
+                                                        <div class="d-inline-block {{ status_colors[word.status_id - 1] }}" style="font-size: 60%">{{ word.title }}</div>
                                                         <ul>
                                                             <li style="cursor: pointer">
                                                                 <i class="mdi mdi-chevron-down"></i>
@@ -127,7 +138,18 @@
                                                         <a href="javascript:void(0)" class="float-end text-primary" onclick="tts({{ word.id }})"><i class="mdi mdi-volume-high"></i></a>
                                                     </div>
                                                     <div class="h--c-magnet-info">
-                                                        <div class="gt-def-row--magnet synonyms"></div>
+                                                        <div class="gt-def-row--magnet synonyms text-secondary position-relative" style="min-height: 31px">
+                                                            <div class="loading-body d-block" style="margin: -1rem">
+                                                                <div class="overflow-hidden">
+                                                                    <div class="lds-ellipsis">
+                                                                        <div></div>
+                                                                        <div></div>
+                                                                        <div></div>
+                                                                        <div></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="gt-def-example--magnet">
                                                             <p>{{ word.dsc_en }}</p>
                                                         </div>

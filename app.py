@@ -34,13 +34,30 @@ def index():
         Word.book_id, Word.unit_id).order_by(asc(Word.book_id), asc(Word.unit_id)).all()
 
     selected_units = db.session.execute(text(
-        f'SELECT "book_id", "unit_id" FROM "words" WHERE "id" IN (SELECT "word_id" FROM "magnets" WHERE "user_id" = \'{session["user_id"]}\') GROUP BY "book_id", "unit_id"'))
+        f'SELECT "book_id", "unit_id" FROM "words" WHERE "id" IN (SELECT "word_id" FROM "magnets" WHERE "selected" = 1 AND "user_id" = \'{session["user_id"]}\') GROUP BY "book_id", "unit_id"'))
     selected_units = [f'{su[0]}-{su[1]}' for su in selected_units]
 
-    words = db.session.execute(text(
-        f'SELECT "magnets"."id" AS "magnet_id", "magnets"."fetch", "words".* FROM "magnets" LEFT JOIN( SELECT "magnet_histories".* FROM "magnet_histories" INNER JOIN ( SELECT MAX ("id") AS "id", "magnet_id" FROM "magnet_histories" GROUP BY "magnet_id" ) AS "X" ON "X"."id" = "magnet_histories"."id" ) AS "MagnetHistoriy" ON "magnets"."id" = "MagnetHistoriy"."magnet_id" INNER JOIN "words" ON "words"."id" = "magnets"."word_id" WHERE "magnets"."selected" = 1 AND "magnets"."user_id" = \'{session["user_id"]}\' ORDER BY ( random() ^ (1.0 / ("MagnetHistoriy"."status_id" + ("magnets"."fetch" * 0.1)) )) ASC'))
+    all_units_res = dict()
+    for bu in all_units:
+        if bu[0] not in all_units_res:
+            all_units_res[bu[0]] = list()
+        all_units_res[bu[0]].append(bu[1])
 
-    return render_template('index.html', all_units=all_units, selected_units=selected_units, words=words)
+    words = db.session.execute(text(
+        f'SELECT "magnets"."id" AS "magnet_id", "magnets"."fetch", "magnet_history_status"."id" AS "status_id", "magnet_history_status"."title", "words".* FROM "magnets" LEFT JOIN ( SELECT "magnet_histories".* FROM "magnet_histories" INNER JOIN ( SELECT MAX ("id") AS "id", "magnet_id" FROM "magnet_histories" GROUP BY "magnet_id" ) AS "X" ON "X"."id" = "magnet_histories"."id" ) AS "MagnetHistoriy" ON "magnets"."id" = "MagnetHistoriy"."magnet_id" INNER JOIN "magnet_history_status" ON "magnet_history_status"."id" = "MagnetHistoriy"."status_id" INNER JOIN "words" ON "words"."id" = "magnets"."word_id" WHERE "magnets"."selected" = 1 AND "magnets"."user_id" = \'{session["user_id"]}\' ORDER BY ( random() ^ (1.0 / ("MagnetHistoriy"."status_id" + ("magnets"."fetch" * 0.1)) )) ASC'))
+
+    return render_template('index.html', all_units=all_units_res, selected_units=selected_units, words=words)
+
+
+def get_word_synonyms(res):
+    synonyms = []
+    if type(res) is list and 'meanings' in res[0] and type(res[0]['meanings']) is list:
+        for m in res[0]['meanings']:
+            for s in m['synonyms']:
+                if len(synonyms) > 3:
+                    return synonyms
+                synonyms.append(s)
+    return synonyms
 
 
 @app.route('/call-details-api/<word_id>')
@@ -53,16 +70,7 @@ def call_details_api(word_id):
     db.session.commit()
 
     res = requests.get(f'https://api.dictionaryapi.dev/api/v2/entries/en/{word.word_en}').json()
-
-    synonyms = []
-    if type(res) is list and 'meanings' in res[0] and type(res[0]['meanings']) is list:
-        for m in res[0]['meanings']:
-            for s in m['synonyms']:
-                synonyms.append(s)
-                if len(synonyms) == 3:
-                    break
-
-    return jsonify({'synonyms': synonyms}), 200
+    return jsonify({'synonyms': get_word_synonyms(res)}), 200
 
 
 @app.route('/tts/<word_id>')
@@ -99,10 +107,12 @@ def change_unit_status(unit_section, status_id):
     words_ids = [w.id for w in words]
     if int(status_id):
         existed_words = db.session.query(Magnet.word_id).filter(and_(
-            Magnet.user_id == session['user_id'], Magnet.word_id.in_(words_ids)))
+            Magnet.user_id == session['user_id'], Magnet.word_id.in_(words_ids))).all()
         existed_words_ids = [w.word_id for w in existed_words]
         new_words_ids = set(words_ids) - set(existed_words_ids)
         db.session.add_all([Magnet(word_id=w, user_id=session['user_id']) for w in new_words_ids])
+        db.session.query(Magnet).filter(and_(
+            Magnet.word_id.in_(existed_words_ids), Magnet.user_id == session['user_id'])).update({'selected': 1})
         db.session.commit()
         db.session.execute(text(
             f'INSERT INTO "magnet_histories" ("magnet_id", "status_id") SELECT "id" AS "magnet_id", \'1\' AS "status_id" FROM "magnets" WHERE "magnets"."user_id" = \'{session["user_id"]}\' AND "magnets"."id" NOT IN (SELECT "magnet_id" FROM "magnet_histories")'))
