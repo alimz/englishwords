@@ -118,8 +118,10 @@
                                             <div class="h--c-magnet">
                                                 <div class="h--c-magnet-head clearfix">
                                                     <div class="word--magnet">
-                                                        <h2>{{ word.word_en }}</h2></div>
+                                                        <h2>{{ word.word_en }}</h2>
+                                                    </div>
                                                     <div class="opt--magnet">
+                                                        <div class="d-inline-block text-secondary" style="font-size: 80%">{{ word.title }}</div>
                                                         <ul>
                                                             <li style="cursor: pointer">
                                                                 <i class="mdi mdi-chevron-down"></i>
@@ -137,7 +139,7 @@
                                                     <div class="h--c-magnet-info">
                                                         <div class="gt-def-row--magnet synonyms text-secondary position-relative" style="min-height: 31px">
                                                             <div class="loading-body d-block" style="margin: -1rem">
-                                                                <div style="min-height: 31px; top: -20px; overflow: hidden;">
+                                                                <div class="overflow-hidden">
                                                                     <div class="lds-ellipsis">
                                                                         <div></div>
                                                                         <div></div>
