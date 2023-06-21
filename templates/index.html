@@ -27,7 +27,6 @@
 
         function changeUnitStatus(unit_id, status_id) {
             $.getJSON("change-unit-status/" + unit_id + "/" + status_id, function (result) {
-                // $("#login-body-loading").hide();
                 location.reload();
             });
         }
@@ -55,7 +54,7 @@
 
         $(document).ready(function () {
             $('#units-selector input').click(function () {
-                $("#login-body-loading").show();
+                $("#units-loading").show();
                 if ($(this).is(':checked') == true) {
                     changeUnitStatus($(this).val(), 1)
                 } else {
@@ -77,7 +76,7 @@
                 </div>
                 <div class="collapse" id="units-collapse">
                     <div class="card-body position-relative" id="units-selector">
-                        <div id="login-body-loading" style="margin: -1rem">
+                        <div class="loading-body" id="units-loading" style="margin: -1rem">
                             <div>
                                 <div class="lds-ellipsis">
                                     <div></div>
@@ -136,7 +135,18 @@
                                                         <a href="javascript:void(0)" class="float-end text-primary" onclick="tts({{ word.id }})"><i class="mdi mdi-volume-high"></i></a>
                                                     </div>
                                                     <div class="h--c-magnet-info">
-                                                        <div class="gt-def-row--magnet synonyms"></div>
+                                                        <div class="gt-def-row--magnet synonyms text-secondary position-relative" style="min-height: 31px">
+                                                            <div class="loading-body d-block" style="margin: -1rem">
+                                                                <div style="min-height: 31px; top: -20px; overflow: hidden;">
+                                                                    <div class="lds-ellipsis">
+                                                                        <div></div>
+                                                                        <div></div>
+                                                                        <div></div>
+                                                                        <div></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="gt-def-example--magnet">
                                                             <p>{{ word.dsc_en }}</p>
                                                         </div>
